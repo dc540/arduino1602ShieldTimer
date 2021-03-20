@@ -14,7 +14,7 @@ const int pin_d4 = 4;
 const int pin_d5 = 5; 
 const int pin_d6 = 6; 
 const int pin_d7 = 7; 
-
+const int buzzer = 3;
 const int pin_BL = 10; 
 
 LiquidCrystal lcd( pin_RS,  pin_EN,  pin_d4,  pin_d5,  pin_d6,  pin_d7);
@@ -35,7 +35,9 @@ void setup() {
   // Set BL pin to LOW to deal with badly implemented shields
   // should always be safe - never set to HIGH and OUTPUT
   digitalWrite(pin_BL, LOW);
-  pinMode(pin_BL, OUTPUT);
+  // pinMode(pin_BL, OUTPUT);
+  digitalWrite(buzzer, LOW);
+  pinMode(buzzer, OUTPUT);
   bool delayRunning = false;
   unsigned long delayStart = 0;
 }  
@@ -47,6 +49,9 @@ void loop() {
       delayRunning = false;
       lcd.setCursor(0,1);
       lcd.print("Countdown Finished");
+      tone(buzzer,1000);
+      delay(250);
+      noTone(buzzer);
       pinMode(pin_BL, OUTPUT);
     }  else {
       secondsLeft = int((delayTime/1000) - int((millis() - delayStart)/1000));
@@ -67,7 +72,13 @@ void loop() {
   if (x < 60) {
     lcd.print ("Right ");
     Serial.print("Right ");
-    pinMode(pin_BL, OUTPUT);
+    lcd.begin(16,2);
+    lcd.setCursor(0,1);
+    lcd.print("Buzzer");
+    tone(buzzer,2600);
+    delay(5000);
+    noTone(buzzer);
+    pinMode(pin_BL, OUTPUT);    
   }
   else if (x < 200) {
     Serial.print("Up    ");  
