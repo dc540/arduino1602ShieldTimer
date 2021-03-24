@@ -15,4 +15,4 @@ Feel free to modify for your own purposes.
 
 Oh, the reason I chose this platform is that I found a simple 3D-printed case on Thingiverse that nicely houses the Arduino Uno and that shield, including button extenders: https://www.thingiverse.com/thing:845415 
 
-I might remix this case to include room for a speaker or piezo, and add sound feedback to the sketch.
+I found this piezo that fits in the case without modification. It's not loud when wired directly, but it works. Might be worth considering adding a transistor. I wired mine directly to pin 3 for now.  https://www.adafruit.com/product/1740
