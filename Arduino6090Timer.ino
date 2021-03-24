@@ -6,6 +6,7 @@ https://dc540.org/xxx
 */
 
 #include <LiquidCrystal.h>
+#include "pitches.h"
 
 //LCD pin to Arduino
 const int pin_RS = 8; 
@@ -16,6 +17,18 @@ const int pin_d6 = 6;
 const int pin_d7 = 7; 
 const int buzzer = 3;
 const int pin_BL = 10; 
+#include "pitches.h"
+
+// notes in the melody:
+int melody[] = {
+  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
+};
+
+// note durations: 4 = quarter note, 8 = eighth note, etc.:
+int noteDurations[] = {
+  4, 8, 8, 4, 4, 4, 4, 4
+};
+
 
 LiquidCrystal lcd( pin_RS,  pin_EN,  pin_d4,  pin_d5,  pin_d6,  pin_d7);
   bool delayRunning = false;
@@ -36,7 +49,7 @@ void setup() {
   // should always be safe - never set to HIGH and OUTPUT
   digitalWrite(pin_BL, LOW);
   // pinMode(pin_BL, OUTPUT);
-  digitalWrite(buzzer, LOW);
+  digitalWrite(buzzer, HIGH);
   pinMode(buzzer, OUTPUT);
   bool delayRunning = false;
   unsigned long delayStart = 0;
@@ -49,9 +62,34 @@ void loop() {
       delayRunning = false;
       lcd.setCursor(0,1);
       lcd.print("Countdown Finished");
-      tone(buzzer,1000);
-      delay(250);
+      /*tone(buzzer,666);
+      delay(500);
       noTone(buzzer);
+      delay(500);
+      tone(buzzer,666);
+      delay(500);
+      noTone(buzzer);
+      delay(500);
+      tone(buzzer,666);
+      delay(500);
+      noTone(buzzer);
+      */
+       // iterate over the notes of the melody:
+  for (int thisNote = 0; thisNote < 8; thisNote++) {
+
+    // to calculate the note duration, take one second divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int noteDuration = 1000 / noteDurations[thisNote];
+    tone(buzzer, melody[thisNote], noteDuration);
+
+    // to distinguish the notes, set a minimum time between them.
+    // the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = noteDuration * 1.30;
+    delay(pauseBetweenNotes);
+    // stop the tone playing:
+    noTone(buzzer);
+  }
+
       pinMode(pin_BL, OUTPUT);
     }  else {
       secondsLeft = int((delayTime/1000) - int((millis() - delayStart)/1000));
@@ -75,7 +113,7 @@ void loop() {
     lcd.begin(16,2);
     lcd.setCursor(0,1);
     lcd.print("Buzzer");
-    tone(buzzer,2600);
+    tone(buzzer,666);
     delay(5000);
     noTone(buzzer);
     pinMode(pin_BL, OUTPUT);    
